@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String     @id @default(cuid())
+  clerkId   String     @unique
+  email     String     @unique
+  name      String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  folders    Folder[]
+  recordings Recording[]
+  chats      Chat[]
+
+  @@map("users")
+}
+
+model Folder {
+  id        String     @id @default(cuid())
+  name      String
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  recordings Recording[]
+
+  @@unique([userId, name])
+  @@map("folders")
+}
+
+model Recording {
+  id              String     @id @default(cuid())
+  title           String
+  description     String?
+  userId          String
+  user            User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  folderId        String?
+  folder          Folder?    @relation(fields: [folderId], references: [id], onDelete: SetNull)
+  
+  audioUrl        String
+  duration        Int?       // in seconds
+  fileSize        Int?       // in bytes
+  mimeType        String?
+  
+  transcript      String?    // full transcript
+  transcriptionStatus String @default("pending") // pending, processing, completed, failed
+  
+  quickSummary    String?    // 5-10 bullet points
+  detailedNotes   String?    // structured markdown
+  actionItems     ActionItem[]
+  summaryStatus   String     @default("pending") // pending, processing, completed, failed
+  
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  chats          Chat[]
+
+  @@index([userId])
+  @@index([folderId])
+  @@map("recordings")
+}
+
+model ActionItem {
+  id          String     @id @default(cuid())
+  task        String
+  owner       String?    @default("Unassigned")
+  dueDate     DateTime?
+  recordingId String
+  recording   Recording  @relation(fields: [recordingId], references: [id], onDelete: Cascade)
+  createdAt   DateTime   @default(now())
+
+  @@index([recordingId])
+  @@map("action_items")
+}
+
+model Chat {
+  id          String     @id @default(cuid())
+  question    String
+  answer      String
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recordingId String
+  recording   Recording  @relation(fields: [recordingId], references: [id], onDelete: Cascade)
+  createdAt   DateTime   @default(now())
+
+  @@index([userId])
+  @@index([recordingId])
+  @@map("chats")
+}
