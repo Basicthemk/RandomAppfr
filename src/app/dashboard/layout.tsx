@@ -30,6 +30,10 @@ export default function DashboardLayout({
         <div className="flex-1">
           <h3 className="text-sm font-semibold text-gray-400 mb-4">FOLDERS</h3>
           <div className="space-y-2">
+            <Link href="/dashboard/folders" className="flex items-center gap-2 p-2 hover:bg-gray-700 rounded cursor-pointer">
+              <Settings size={18} />
+              <span>Manage Folders</span>
+            </Link>
             <div className="flex items-center gap-2 p-2 hover:bg-gray-700 rounded cursor-pointer">
               <Folder size={18} />
               <span>All Recordings</span>

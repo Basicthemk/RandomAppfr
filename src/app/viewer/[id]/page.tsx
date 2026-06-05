@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { ExportButton } from "@/components/ExportButton";
 import {
   Play,
   Pause,
@@ -127,9 +128,7 @@ export default function ViewerPage() {
             <h1 className="text-3xl font-bold">{recording.title}</h1>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
-              <Download size={20} /> Export
-            </Button>
+            <ExportButton recordingId={recording.id} recordingTitle={recording.title} />
             <Button
               onClick={() => setChatOpen(!chatOpen)}
               variant="outline"

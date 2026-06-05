@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Play, Download, Trash2, MoreVertical } from "lucide-react";
 import { formatBytes, formatTime } from "@/lib/utils";
+import { SearchComponent } from "@/components/SearchComponent";
 
 interface Recording {
   id: string;
@@ -45,6 +46,11 @@ export default function DashboardPage() {
 
   return (
     <div className="p-8">
+      {/* Search */}
+      <div className="mb-8">
+        <SearchComponent />
+      </div>
+
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
         <div className="bg-gray-800 rounded-lg p-6">
